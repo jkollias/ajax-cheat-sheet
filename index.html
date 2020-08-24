@@ -12,7 +12,7 @@
 
 	<button type="button" onclick="ajaxCallJsonFile('sample.json','ajax-result')">Change Content From Json File</button>
 
-	<button type="button" onclick="ajaxCallJsonFile('sample.json','ajax-result')">Change Content From PHP File That Pulls From a DB</button>
+	<button type="button" onclick="ajaxCallPHPFile('getAdminUserNameData.php','ajax-result')">Change Content From PHP File</button>
 
 	<div id="ajax-result">
 	  
@@ -67,6 +67,33 @@
 			};
 
 			ajaxRequest.open("GET","file-samples/sample.json",true);
+			ajaxRequest.send();
+		}
+
+		function ajaxCallPHPFile(file,div){
+			let ajaxRequest = new XMLHttpRequest();
+			let responseDiv = document.getElementById(div);
+
+			ajaxRequest.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					let ajaxResponse = this.responseText;
+					let output = "";
+					    output += "<ul>";
+					    output += "<li>"+ajaxResponse.name+"</li>";
+					    output += "<li>"+ajaxResponse.age+"</li>";
+					    output += "<li>"+ajaxResponse.city+"</li>";
+				    	output += "</ul>";
+
+					responseDiv.innerHTML = ajaxResponse;
+				}else if(this.status == 404){
+					responseDiv.innerHTML = "There was an error: The file is not found";
+				}else if(this.status == 403){
+					responseDiv.innerHTML = "There was an error: The file is set to forbidden";
+				}
+
+			};
+
+			ajaxRequest.open("GET","file-samples/getAdminUserNameData.php",true);
 			ajaxRequest.send();
 		}
 		

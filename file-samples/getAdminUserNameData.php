@@ -1,10 +1,14 @@
 <?php 
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 /* SELECT username from admin_user */
 
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "";
 $dbname = "enterprise";
 
 // DB Connection
@@ -18,14 +22,12 @@ if ($connectionToEnterpriseDB->connect_error) {
   die("Connection failed: " . $connToEnterpriseDB->connect_error);
 } 
 
-echo "Hello Worlds";
-
 $adminUserNames = $connectionToEnterpriseDB->query($SQL_AdminUsersNames);
 
 if ($adminUserNames->num_rows > 0) {
   // output data of each row
-  while($row = $result->fetch_assoc()) {
-    echo "id: " . $row["id"]. " - Name: " . $row["username"]. "<br>";
+  while($row = $adminUserNames->fetch_assoc()) {
+    echo " Name: " . $row["username"]. "<br>";
   }
 } else {
   echo "0 results";
