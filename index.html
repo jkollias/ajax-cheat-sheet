@@ -7,7 +7,7 @@
 </head>
 <body>
 	<h1>AJAX Sample</h1>
-
+	<p>With Get</p>
 	<button type="button" onclick="ajaxCallTextFile('ajax_info.txt','ajax-result')">Change Content From Text File</button>
 
 	<button type="button" onclick="ajaxCallJsonFile('sample.json','ajax-result')">Change Content From Json File</button>
@@ -98,5 +98,105 @@
 		}
 		
 	</script>
+
+	<h1>Ajax Form Using Get Method</h1>
+	<p>Not Safe</p>
+	<form id="get-form">
+		<input type="text" name="name" id="user_name">
+		<button>Submit</button>
+	</form>
+
+	<script type="text/javascript">
+		document.getElementById('get-form').addEventListener("submit", getName);
+
+
+		function getName(e){
+			e.preventDefault();
+			var name = document.getElementById("user_name").value;
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET','file-samples/process.php?name='+name, true);
+			// xhr.open('GET','file-samples/process.php?name=Jason', true);
+
+			xhr.onload = function(){
+				console.log(this.responseText);
+			}
+
+			xhr.send();
+
+			
+		}
+	</script>
+
+	<h1>Ajax Form Using Post Method</h1>
+	<p>Safe and prefered</p>
+	<form id="post-form">
+		<input type="text" name="name" id="post_name">
+		<button>Submit</button>
+	</form>
+
+	<script type="text/javascript">
+		document.getElementById('post-form').addEventListener("submit", postName);
+
+
+		function postName(e){
+			e.preventDefault();
+
+			var name = document.getElementById("post_name").value;
+			//console.log(name);
+			var params ="name="+name;
+			//var params = "name=tom";
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST','file-samples/process.php', true);
+			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		
+			xhr.onload = function(){
+				console.log(this.responseText);
+			}
+
+			xhr.send(params);
+	
+		}
+	</script>
+<br>
+<h2>Ajax Fetch php mysql</h2>
+<button id="load-users-btn">load Users</button>
+
+<div id="users"></div>
+
+<script>
+	document.getElementById("load-users-btn").addEventListener('click', loadUsers);
+
+	function loadUsers(){
+			let ajaxRequest = new XMLHttpRequest();
+			let responseDiv = document.getElementById("users");
+
+			ajaxRequest.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					let users = JSON.parse(this.responseText);
+					let output = "";
+
+					    output += "<ul>";
+					    for(var i in users){
+					    	output += "<li>"+users[i].ID+"</li>";
+					    	output += "<li>"+users[i].name+"</li>";
+					    }
+					   
+				    	output += "</ul>";
+
+					responseDiv.innerHTML = output;
+				}else if(this.status == 404){
+					responseDiv.innerHTML = "There was an error: The file is not found";
+				}else if(this.status == 403){
+					responseDiv.innerHTML = "There was an error: The file is set to forbidden";
+				}
+
+			};
+
+			ajaxRequest.open("GET","file-samples/users.php",true);
+			ajaxRequest.send();
+		}
+</script>
+
+
 </body>
 </html>
